@@ -26,6 +26,18 @@ class KMeans:
         Parameters:
         - data: Input data to be clustered.
         """
+
+        """In the context of K-means clustering, inertia is a metric used to evaluate the quality of a clustering solution. It represents the sum of squared distances between each data point and its nearest centroid. In other words, inertia measures how compact the clusters are; lower inertia indicates tighter clusters."""
+
+        """Convergence in the context of K-means clustering refers to the state where the algorithm has reached a stable solution, and further iterations do not significantly change the cluster assignments or the positions of the centroids. In other words, convergence occurs when the algorithm has found centroids that minimize the inertia or the sum of squared distances between data points and their assigned centroids.
+
+        In practical terms, convergence is typically achieved when either:
+
+        The centroids do not change significantly between iterations (i.e., they stabilize).
+        The cluster assignments of data points do not change between iterations.
+        When the algorithm converges, it means that it has likely found a satisfactory clustering solution, and further iterations are unlikely to improve the clustering quality significantly. However, it's important to note that K-means clustering is sensitive to the initial centroid positions, and it may converge to local optima rather than the global optimum. Therefore, it's common to run the algorithm multiple times with different initializations to mitigate this issue."""
+
+        
         best_inertia = float('inf') # Initialize best inertia to positive infinity
         for _ in range(self.n_init): # Iterate over the number of initializations
             centroids = data[np.random.choice(len(data), self.k, replace=False)] # Randomly initialize centroids
