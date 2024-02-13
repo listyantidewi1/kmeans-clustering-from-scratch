@@ -39,3 +39,7 @@ pip install matplotlib
 ```bash
 pip install tk
 ```
+
+## Run The Algorithm
+```bash
+pythom kmeans.py```
