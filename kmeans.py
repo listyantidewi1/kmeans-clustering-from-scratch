@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tkinter import Tk, Canvas, Button, TOP, Label
+import pandas as pd
+import seaborn as sns
 
 class KMeans:
     def __init__(self, k=2, max_iter=100, n_init=10):
@@ -47,12 +49,12 @@ def display_gui(data, labels, centroids):
 
     description_label = Label(root, text="Data Description", font=("Arial", 14, "bold"))
     description_label.pack(pady=5)
-    
+
     # Calculate data description statistics
-    avg = np.mean(data, axis=0)
-    std_dev = np.std(data, axis=0)
-    min_val = np.min(data, axis=0)
-    max_val = np.max(data, axis=0)
+    avg = np.mean(data, axis=0) #average
+    std_dev = np.std(data, axis=0) #standar deviasi
+    min_val = np.min(data, axis=0) #nilai minimal
+    max_val = np.max(data, axis=0) #nilai maksimal
 
     # Convert numpy arrays to strings
     avg_str = ", ".join(map(str, avg))
@@ -72,12 +74,41 @@ def display_gui(data, labels, centroids):
     max_label = Label(root, text=f"Maximum Value: {max_val}", font=("Arial", 12))
     max_label.pack()
 
-    
+    def visualize_histogram():
+        plt.figure(figsize=(12, 6))
+        plt.subplot(1, 2, 1)
+        plt.hist(data[:, 0], bins=20, color='skyblue', edgecolor='black')
+        plt.xlabel('Feature 1')
+        plt.ylabel('Frequency')
+        plt.title('Histogram of Feature 1')
+
+        plt.subplot(1, 2, 2)
+        plt.hist(data[:, 1], bins=20, color='salmon', edgecolor='black')
+        plt.xlabel('Feature 2')
+        plt.ylabel('Frequency')
+        plt.title('Histogram of Feature 2')
+        plt.tight_layout()
+        plt.show()
+
+    def visualize_scatter_matrix():
+        df = pd.DataFrame(data, columns=['Feature 1', 'Feature 2'])
+        sns.pairplot(df)
+        plt.show()
+
+
+    # fungsi untuk menampilkan scatterplot menggunakan button pada Tkinter
     def show_matplotlib_figure():
         kmeans.visualize(data)
-
+    
+    # membuat button
     button = Button(root, text="Click to Show Scatter Plot", command=show_matplotlib_figure)
     button.pack()
+
+    visualize_histogram_button = Button(root, text="Visualize Histogram", command=visualize_histogram)
+    visualize_histogram_button.pack(pady=5)
+
+    visualize_scatter_matrix_button = Button(root, text="Visualize Scatter Matrix", command=visualize_scatter_matrix)
+    visualize_scatter_matrix_button.pack(pady=5)
 
     root.mainloop()
 
