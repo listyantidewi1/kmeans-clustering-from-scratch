@@ -28,11 +28,14 @@ Once Python is installed, you can install the required libraries using pip, the 
 ### Install numpy
 ```bash
 pip install numpy 
+```
 
 ### Install matplotlib
 ```bash
 pip install matplotlib
+```
 
 ### Install TKinter
 ```bash
 pip install tk
+```
