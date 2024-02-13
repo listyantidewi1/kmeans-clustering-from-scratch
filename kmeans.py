@@ -5,25 +5,40 @@ import pandas as pd
 import seaborn as sns
 
 class KMeans:
+    
     def __init__(self, k=2, max_iter=100, n_init=10):
         self.k = k
         self.max_iter = max_iter
         self.n_init = n_init
+        """
+        Initialize KMeans clustering algorithm.
+
+        Parameters:
+        - k: Number of clusters (default is 2).
+        - max_iter: Maximum number of iterations for each initialization (default is 100).
+        - n_init: Number of times the algorithm will be initialized with different centroids (default is 10).
+        """
 
     def fit(self, data):
-        best_inertia = float('inf')
-        for _ in range(self.n_init):
-            centroids = data[np.random.choice(len(data), self.k, replace=False)]
-            for _ in range(self.max_iter):
-                clusters = [[] for _ in range(self.k)]
-                for point in data:
+        """
+        Fit the KMeans model to the data.
+
+        Parameters:
+        - data: Input data to be clustered.
+        """
+        best_inertia = float('inf') # Initialize best inertia to positive infinity
+        for _ in range(self.n_init): # Iterate over the number of initializations
+            centroids = data[np.random.choice(len(data), self.k, replace=False)] # Randomly initialize centroids
+            for _ in range(self.max_iter): # Iterate over the maximum number of iterations
+                clusters = [[] for _ in range(self.k)] # Initialize clusters
+                for point in data: # Assign each data point to the nearest centroid
                     distances = [np.linalg.norm(point - centroid) for centroid in centroids]
                     cluster_idx = np.argmin(distances)
                     clusters[cluster_idx].append(point)
-                for i in range(self.k):
+                for i in range(self.k): # Update centroids based on the mean of data points in each cluster
                     centroids[i] = np.mean(clusters[i], axis=0)
             inertia = sum(np.sum((data - centroids[label])**2) for label, cluster in enumerate(clusters))
-            if inertia < best_inertia:
+            if inertia < best_inertia: # Update centroids and labels if inertia is smaller
                 best_inertia = inertia
                 self.centroids = centroids
                 self.labels = np.zeros(len(data))
@@ -31,6 +46,12 @@ class KMeans:
                     self.labels[[data.tolist().index(point.tolist()) for point in cluster]] = i
 
     def visualize(self, data):
+        """
+        Visualize the clustered data and centroids.
+
+        Parameters:
+        - data: Input data to be visualized.
+        """
         plt.scatter(data[:, 0], data[:, 1], c=self.labels, cmap='viridis')
         plt.scatter(self.centroids[:, 0], self.centroids[:, 1], c='red', marker='x')
         plt.show()
