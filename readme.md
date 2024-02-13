@@ -40,6 +40,16 @@ pip install matplotlib
 pip install tk
 ```
 
+### Install Pandas
+```bash
+pip install pandas
+```
+
+### Install Seaborn
+```bash
+pip install seaborn```
+
+
 
 ## Run The Algorithm
 ```bash
