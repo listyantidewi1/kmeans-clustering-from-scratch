@@ -24,5 +24,15 @@ To run this code, you need to have Python installed on your system. You can down
 
 Once Python is installed, you can install the required libraries using pip, the Python package manager. Open a terminal or command prompt and run the following commands:
 
+
+### Install numpy
 ```bash
-pip install numpy matplotlib
+pip install numpy 
+
+### Install matplotlib
+```bash
+pip install matplotlib
+
+### Install TKinter
+```bash
+pip install tk
