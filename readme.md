@@ -19,14 +19,10 @@ This code implements the K-means clustering algorithm from scratch in Python. K-
 ## Convergence
 Convergence occurs when the algorithm reaches a stable solution, indicated by the centroids no longer changing significantly between iterations. It means that the algorithm has found a good clustering arrangement, and further iterations won't lead to significant improvements in the clustering result.
 
+## Installation
+To run this code, you need to have Python installed on your system. You can download and install Python from the [official Python website](https://www.python.org/downloads/).
 
-# Installation
+Once Python is installed, you can install the required libraries using pip, the Python package manager. Open a terminal or command prompt and run the following commands:
 
-1. Install python
-2. Install numpy
-3. Install matplotlib
-4. Install TKinter
-   
-# Run
-
-python kmeans.py
+```bash
+pip install numpy matplotlib
