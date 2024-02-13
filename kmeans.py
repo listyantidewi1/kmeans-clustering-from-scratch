@@ -74,6 +74,7 @@ def display_gui(data, labels, centroids):
     max_label = Label(root, text=f"Maximum Value: {max_val}", font=("Arial", 12))
     max_label.pack()
 
+    # fungsi untuk membuat histogram
     def visualize_histogram():
         plt.figure(figsize=(12, 6))
         plt.subplot(1, 2, 1)
@@ -90,6 +91,7 @@ def display_gui(data, labels, centroids):
         plt.tight_layout()
         plt.show()
 
+    # fungsi untuk membuat scatter matrix
     def visualize_scatter_matrix():
         df = pd.DataFrame(data, columns=['Feature 1', 'Feature 2'])
         sns.pairplot(df)
@@ -100,13 +102,15 @@ def display_gui(data, labels, centroids):
     def show_matplotlib_figure():
         kmeans.visualize(data)
     
-    # membuat button
+    # membuat button untuk menampilkan scatter plot hasil clustering
     button = Button(root, text="Click to Show Scatter Plot", command=show_matplotlib_figure)
     button.pack()
 
+    # button untuk menampilkan histogram
     visualize_histogram_button = Button(root, text="Visualize Histogram", command=visualize_histogram)
     visualize_histogram_button.pack(pady=5)
 
+    # button untuk menampilkan scatter matrix
     visualize_scatter_matrix_button = Button(root, text="Visualize Scatter Matrix", command=visualize_scatter_matrix)
     visualize_scatter_matrix_button.pack(pady=5)
 
