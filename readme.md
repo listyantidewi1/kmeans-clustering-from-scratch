@@ -42,4 +42,5 @@ pip install tk
 
 ## Run The Algorithm
 ```bash
-pythom kmeans.py```
+python kmeans.py
+```
