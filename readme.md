@@ -40,6 +40,7 @@ pip install matplotlib
 pip install tk
 ```
 
+
 ## Run The Algorithm
 ```bash
 python kmeans.py
