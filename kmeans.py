@@ -75,30 +75,22 @@ class KMeans:
         plt.show()
 
 def display_gui(data, labels, centroids):
-    """
-    Display the clustering result in a Tkinter GUI.
-
-    Parameters:
-    - data: Input data, numpy array of shape (n_samples, n_features).
-    - labels: Cluster labels assigned to each data point.
-    - centroids: Centroids of the clusters.
-    """
     root = Tk()
     root.title("K-Means Clustering")
 
-    canvas = Canvas(root, width=400, height=400)
+    canvas = Canvas(root, width=800, height=800)  # Increase canvas size for better visibility
     canvas.pack()
 
-    # Scale data points to fit canvas
-    data_scaled = data * 300 + 200
+    # Scale data points to fit canvas using the same scaling factor as matplotlib
+    data_scaled = data * 300 + 300
 
     # Plot data points
     for i, (x, y) in enumerate(data_scaled):
         color = ('#FF5733' if labels[i] == 0 else '#33FF57')
         canvas.create_oval(x - 3, y - 3, x + 3, y + 3, fill=color)
 
-    # Plot centroids
-    centroids_scaled = centroids * 300 + 200
+    # Scale centroids using the same scaling factor as matplotlib
+    centroids_scaled = centroids * 300 + 300
     for (x, y) in centroids_scaled:
         canvas.create_rectangle(x - 5, y - 5, x + 5, y + 5, fill='red')
 
