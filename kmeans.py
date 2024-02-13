@@ -94,6 +94,15 @@ def display_gui(data, labels, centroids):
     for (x, y) in centroids_scaled:
         canvas.create_rectangle(x - 5, y - 5, x + 5, y + 5, fill='red')
 
+    # Add labels to axes
+    canvas.create_text(300, 10, text="K-Means Clustering", font=("Arial", 14), fill="black")
+    canvas.create_text(300, 590, text="Feature 1", font=("Arial", 12), fill="black")
+    canvas.create_text(10, 300, text="Feature 2", font=("Arial", 12), fill="black", angle=90)
+
+    # Add description
+    canvas.create_text(100, 30, text="Data Points", font=("Arial", 12), fill="#FF5733")
+    canvas.create_text(500, 30, text="Centroids", font=("Arial", 12), fill="red")
+
     root.mainloop()
 
 # Generate random data
