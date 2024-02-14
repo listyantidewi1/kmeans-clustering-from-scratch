@@ -44,8 +44,8 @@ class KMeans:
             for _ in range(self.max_iter): # Iterate over the maximum number of iterations
                 clusters = [[] for _ in range(self.k)] # Initialize clusters
                 for point in data: # Assign each data point to the nearest centroid
-                    distances = [np.linalg.norm(point - centroid) for centroid in centroids]
-                    cluster_idx = np.argmin(distances)
+                    distances = [((point - centroid) ** 2).sum() for centroid in centroids]
+                    cluster_idx = min(range(self.k), key=lambda i: distances[i])
                     clusters[cluster_idx].append(point)
                 for i in range(self.k): # Update centroids based on the mean of data points in each cluster
                     centroids[i] = np.mean(clusters[i], axis=0)
@@ -67,6 +67,19 @@ class KMeans:
         plt.scatter(data[:, 0], data[:, 1], c=self.labels, cmap='viridis')
         plt.scatter(self.centroids[:, 0], self.centroids[:, 1], c='red', marker='x')
         plt.show()
+
+    def silhouette_score(self, data):
+        labels = self.labels
+        n = len(data)
+        a = np.zeros(n)
+        b = np.zeros(n)
+        for i in range(n):
+            cluster_i = labels[i]
+            cluster_i_points = data[labels == cluster_i]
+            a[i] = np.mean([sum((data[i] - point) ** 2) ** 0.5 for point in cluster_i_points])
+            b[i] = min([np.mean([sum((data[i] - point) ** 2) ** 0.5 for point in data[labels == j]]) for j in range(self.k) if j != cluster_i])
+        sil_scores = (b - a) / np.maximum(a, b)
+        return np.mean(sil_scores)
 
 def display_gui(data, labels, centroids):
 
@@ -106,6 +119,11 @@ def display_gui(data, labels, centroids):
 
     max_label = Label(root, text=f"Maximum Value: {max_val}", font=("Arial", 12))
     max_label.pack()
+
+    # Calculate silhouette score
+    silhouette_avg = kmeans.silhouette_score(data)
+    silhouette_score_value_label = Label(root, text="Silhouette score: "+str(silhouette_avg), font=("Arial", 12))
+    silhouette_score_value_label.pack()
 
     # fungsi untuk membuat histogram
     def visualize_histogram():
@@ -154,7 +172,7 @@ np.random.seed(0)
 data = np.random.randn(100, 2)
 
 # Perform K-means clustering
-kmeans = KMeans(k=2, n_init=10)
+kmeans = KMeans(k=3, n_init=100)
 kmeans.fit(data)
 
 # Display result in Tkinter GUI
