@@ -13,7 +13,7 @@ data = pd.read_csv('clustering.csv')
 X = data[["LoanAmount","ApplicantIncome"]]
 
 # Define the number of clusters (K)
-K = 3
+K = 2
 
 # Step 1 and 2 - Select random centroids for each cluster
 Centroids = X.sample(n=K, random_state=42)
