@@ -18,13 +18,48 @@ K = 4
 # Step 1 and 2 - Select random centroids for each cluster
 Centroids = X.sample(n=K, random_state=42)
 
-# Define functions for visualization and K-means clustering
+# Define the maximum number of clusters to consider
+MAX_CLUSTERS = 10
+
+# Function to determine the optimal number of clusters using the elbow method
+def find_optimal_clusters():
+    distortions = []
+    for k in range(1, MAX_CLUSTERS + 1):
+        centroids = X.sample(n=k, random_state=42).values
+        cluster_assignments = assign_clusters(X.values, centroids)
+        distortion = calculate_distortion(X.values, centroids, cluster_assignments)
+        distortions.append(distortion)
+    return distortions
+
+# Function to assign each point to the nearest centroid
+def assign_clusters(X_values, centroids):
+    cluster_assignments = []
+    for point in X_values:
+        distances = [euclidean_distance(point, centroid) for centroid in centroids]
+        cluster_assignments.append(np.argmin(distances))
+    return cluster_assignments
+
+# Function to calculate the total distortion (sum of squared distances from each point to its centroid)
+def calculate_distortion(X_values, centroids, cluster_assignments):
+    total_distortion = 0
+    for i, point in enumerate(X_values):
+        cluster = cluster_assignments[i]
+        total_distortion += euclidean_distance(point, centroids[cluster]) ** 2
+    return total_distortion
+
+# Function to visualize the elbow plot
+def visualize_elbow_plot(distortions):
+    plt.plot(range(1, MAX_CLUSTERS + 1), distortions, marker='o')
+    plt.xlabel('Number of Clusters')
+    plt.ylabel('Distortion')
+    plt.title('Elbow Method')
+    plt.show()
 
 # Function to visualize scatter plot of raw data
 def visualize_scatter_plot_raw_data():
-    plt.scatter(X["LoanAmount"], X["ApplicantIncome"], c='black')
-    plt.xlabel('Loan Amount')
-    plt.ylabel('Applicant Income')
+    plt.scatter(X["ApplicantIncome"], X["LoanAmount"], c='black')
+    plt.xlabel('AnnualIncome')
+    plt.ylabel('Loan Amount (In Thousands)')
     plt.show()
 
 # Function to visualize scatter matrix
@@ -35,10 +70,10 @@ def visualize_scatter_matrix():
 
 # Function to visualize initial centroids
 def initial_centroids():
-    plt.scatter(X["LoanAmount"], X["ApplicantIncome"], c='black') 
-    plt.scatter(Centroids["LoanAmount"], Centroids["ApplicantIncome"], c='red')
-    plt.xlabel('LoanAmount')
-    plt.ylabel('ApplicantIncome')
+    plt.scatter(X["ApplicantIncome"], X["LoanAmount"], c='black') 
+    plt.scatter(Centroids["ApplicantIncome"], Centroids["LoanAmount"], c='red')
+    plt.xlabel('AnnualIncome')
+    plt.ylabel('Loan Amount (In Thousands)')
     plt.show()
 
 # Function to calculate distance between two points
@@ -49,28 +84,15 @@ def euclidean_distance(point1, point2):
 def kmeans():
     centroids = Centroids.values
     X_values = X.values
-    
-    while True:
-        # Assign each point to the nearest centroid
-        cluster_assignments = []
-        for point in X_values:
-            distances = [euclidean_distance(point, centroid) for centroid in centroids]
-            cluster_assignments.append(np.argmin(distances))
-        
-        # Update centroids
-        new_centroids = []
-        for i in range(K):
-            cluster_points = X_values[np.array(cluster_assignments) == i]
-            new_centroid = np.mean(cluster_points, axis=0)
-            new_centroids.append(new_centroid)
-        
-        # Check convergence
-        if np.allclose(centroids, new_centroids):
-            break
-        
-        centroids = np.array(new_centroids)
-    
-    # Calculate silhouette score
+    cluster_assignments = assign_clusters(X_values, centroids)
+    distortion = calculate_distortion(X_values, centroids, cluster_assignments)
+    silhouette_score = calculate_silhouette_score(X_values, cluster_assignments)
+    print(f"Distortion: {distortion}")
+    print(f"Silhouette Score: {silhouette_score}")
+    visualize_clusters(centroids, cluster_assignments)
+
+# Function to calculate silhouette score
+def calculate_silhouette_score(X_values, cluster_assignments):
     silhouette_values = []
     for i, point in enumerate(X_values):
         cluster = cluster_assignments[i]
@@ -87,21 +109,19 @@ def kmeans():
         silhouette_values.append((b_i - a_i) / max(a_i, b_i))
     
     silhouette_avg = np.mean(silhouette_values)
-    
-    # Plot clusters
+    return silhouette_avg
+
+# Function to visualize clusters
+def visualize_clusters(centroids, cluster_assignments):
     for i in range(K):
-        cluster_points = X_values[np.array(cluster_assignments) == i]
+        cluster_points = X.values[np.array(cluster_assignments) == i]
         plt.scatter(cluster_points[:, 0], cluster_points[:, 1], cmap='viridis')
         plt.scatter(centroids[i][0], centroids[i][1], c='red', marker='x')
         plt.text(centroids[i][0], centroids[i][1], f'Cluster {i+1}', fontsize=12, color='red')
     
-    plt.xlabel('Loan Amount (In Thousands)')
-    plt.ylabel('Income ')
+    plt.xlabel('Income')
+    plt.ylabel('Loan Amount (In Thousands)')
     plt.show()
-    
-    # Display silhouette score
-    silhouette_label = Label(root, text=f"Silhouette Score: {silhouette_avg}", font=("Arial", 12))
-    silhouette_label.pack()
 
 # Display GUI
 root = Tk()
@@ -142,7 +162,6 @@ maxIncomeLabel = Label(root, text=f"Maximum Income : {maxIncome}", font=("Arial"
 minLoanLabel = Label(root, text=f"Minimum Loan Amount : {minLoan}", font=("Arial", 12))
 maxLoanLabel = Label(root, text=f"Maximum Loan Amount : {maxLoan}", font=("Arial", 12))
 
-
 # Buttons to trigger different actions
 visualizeScatterMatrixButton = Button(root, text="Show Scatter Matrix", command=visualize_scatter_matrix)
 visualizeScatterMatrixButton.pack()
@@ -155,5 +174,9 @@ displayInitialCentroidsButton.pack()
 
 buttonClustering = Button(root, text="Analyze Cluster", command=kmeans)
 buttonClustering.pack()
+
+# Find and visualize the optimal number of clusters using the elbow method
+distortions = find_optimal_clusters()
+visualize_elbow_plot(distortions)
 
 root.mainloop()
