@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import colormaps
 from tkinter import Tk, Canvas, Button, TOP, Label
 import pandas as pd
 import seaborn as sns
