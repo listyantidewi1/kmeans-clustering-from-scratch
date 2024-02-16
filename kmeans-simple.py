@@ -13,7 +13,7 @@ data = pd.read_csv('clustering.csv')  # Loading data from 'clustering.csv' into 
 X = data[["LoanAmount","ApplicantIncome"]]  # Extracting features for clustering
 
 # Define the number of clusters (K)
-K = 4  # Setting the number of clusters to 4
+K = 7  # Setting the number of clusters to 4
 
 # Step 1 and 2 - Select random centroids for each cluster
 Centroids = X.sample(n=K, random_state=42)  # Randomly selecting K centroids from the data
@@ -103,6 +103,36 @@ def kmeans():
     silhouette_label = Label(root, text=f"Silhouette Score: {silhouette_avg}", font=("Arial", 12))
     silhouette_label.pack()
 
+# Function to visualize the Elbow Method for determining the optimal number of clusters
+def elbow_method():
+    distortions = []  # Initializing list to store distortion values
+    
+    # Calculating distortion for different values of K
+    for k in range(1, 11):  # Trying K values from 1 to 10
+        Centroids = X.sample(n=k, random_state=42)  # Randomly selecting K centroids from the data
+        centroids = Centroids.values  # Extracting centroid values
+        X_values = X.values  # Extracting feature values
+        
+        cluster_assignments = []  # Initializing list to store cluster assignments
+        for point in X_values:
+            distances = [euclidean_distance(point, centroid) for centroid in centroids]  # Calculating distances to centroids
+            cluster_assignments.append(np.argmin(distances))  # Assigning point to the nearest centroid
+        
+        distortion = 0  # Initializing distortion for current K
+        for i in range(k):
+            cluster_points = X_values[np.array(cluster_assignments) == i]  # Extracting points belonging to cluster i
+            centroid = np.mean(cluster_points, axis=0)  # Calculating centroid of cluster
+            distortion += np.sum((cluster_points - centroid) ** 2)  # Calculating sum of squared distances from centroid
+        
+        distortions.append(distortion)  # Appending distortion to list
+    
+    # Plotting the Elbow Method
+    plt.plot(range(1, 11), distortions, marker='o')  # Plotting K values against distortions
+    plt.xlabel('Number of Clusters')  # Labeling x-axis
+    plt.ylabel('Distortion')  # Labeling y-axis
+    plt.title('Elbow Method')  # Adding title
+    plt.show()  # Displaying the plot
+
 # Display GUI
 root = Tk()  # Creating Tkinter window
 root.title("K-Means Clustering")  # Setting window title
@@ -143,6 +173,11 @@ minLoanLabel = Label(root, text=f"Minimum Loan Amount : {minLoan}", font=("Arial
 maxLoanLabel = Label(root, text=f"Maximum Loan Amount : {maxLoan}", font=("Arial", 12))
 
 # Buttons to trigger different actions
+
+# Button to trigger the Elbow Method visualization
+elbowMethodButton = Button(root, text="Visualize Elbow Method", command=elbow_method)
+elbowMethodButton.pack()
+
 visualizeScatterMatrixButton = Button(root, text="Show Scatter Matrix", command=visualize_scatter_matrix)
 visualizeScatterMatrixButton.pack()
 
