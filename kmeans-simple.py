@@ -72,7 +72,7 @@ def kmeans():
         
         centroids = np.array(new_centroids)  # Updating centroids
     
-    # Calculate silhouette score
+    # Calculate silhouette score, rumus: https://www.analyticsvidhya.com/blog/2021/05/k-mean-getting-the-optimal-number-of-clusters/#:~:text=The%20silhouette%20coefficient%20or%20silhouette,scikit%2Dlearn%2Fsklearn%20library.
     silhouette_values = []  # Initializing list to store silhouette values
 
     # Iterate over X_values directly
@@ -113,6 +113,7 @@ def kmeans():
     silhouette_label.pack()
 
 # Function to visualize the Elbow Method for determining the optimal number of clusters
+    # rumus: https://www.analyticsvidhya.com/blog/2021/01/in-depth-intuition-of-k-means-clustering-algorithm-in-machine-learning/
 def elbow_method():
     distortions = []  # Initializing list to store distortion values
     
