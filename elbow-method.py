@@ -13,7 +13,7 @@ data = pd.read_csv('clustering.csv')
 X = data[["LoanAmount","ApplicantIncome"]]
 
 # Define the number of clusters (K)
-K = 4
+K = 3
 
 # Step 1 and 2 - Select random centroids for each cluster
 Centroids = X.sample(n=K, random_state=42)
@@ -57,9 +57,9 @@ def visualize_elbow_plot(distortions):
 
 # Function to visualize scatter plot of raw data
 def visualize_scatter_plot_raw_data():
-    plt.scatter(X["ApplicantIncome"], X["LoanAmount"], c='black')
-    plt.xlabel('AnnualIncome')
-    plt.ylabel('Loan Amount (In Thousands)')
+    plt.scatter(X["LoanAmount"], X["ApplicantIncome"], c='black')
+    plt.xlabel('LoanAmount')
+    plt.ylabel('ApplicantIncome')
     plt.show()
 
 # Function to visualize scatter matrix
@@ -70,10 +70,10 @@ def visualize_scatter_matrix():
 
 # Function to visualize initial centroids
 def initial_centroids():
-    plt.scatter(X["ApplicantIncome"], X["LoanAmount"], c='black') 
-    plt.scatter(Centroids["ApplicantIncome"], Centroids["LoanAmount"], c='red')
-    plt.xlabel('AnnualIncome')
-    plt.ylabel('Loan Amount (In Thousands)')
+    plt.scatter(X["LoanAmount"], X["ApplicantIncome"], c='black') 
+    plt.scatter(Centroids["LoanAmount"], Centroids["ApplicantIncome"], c='red')
+    plt.xlabel('LoanAmount')
+    plt.ylabel('ApplicantIncome')
     plt.show()
 
 # Function to calculate distance between two points
