@@ -55,7 +55,7 @@ def kmeans():
         cluster_assignments = []  # Initializing list to store cluster assignments
         for point in X_values:
             distances = [euclidean_distance(point, centroid) for centroid in centroids]  # Calculating distances to centroids
-            cluster_assignments.append(np.argmin(distances))  # Assigning point to the nearest centroid
+            cluster_assignments.append(np.argmin(distances))  # Assigning point to the nearest centroid. np.argmin -> Returns the indexes of the minimum values along an axis.
         
         # Update centroids
         new_centroids = []  # Initializing list to store updated centroids
@@ -65,6 +65,8 @@ def kmeans():
             new_centroids.append(new_centroid)  # Appending new centroid
         
         # Check convergence
+        # np.allclose Returns True if two arrays are element-wise equal within a tolerance. The tolerance values are positive, typically very small numbers.
+            #In the context of k-means clustering, np.allclose is used to check whether the centroids have converged. If the centroids have converged, it means that the algorithm has reached a stable solution and can terminate
         if np.allclose(centroids, new_centroids):  # Checking if centroids have converged
             break
         
@@ -72,21 +74,28 @@ def kmeans():
     
     # Calculate silhouette score
     silhouette_values = []  # Initializing list to store silhouette values
-    for i, point in enumerate(X_values):
-        cluster = cluster_assignments[i]  # Getting cluster assignment for point
+
+    # Iterate over X_values directly
+    for point_idx in range(len(X_values)):
+        point = X_values[point_idx]  # Get the current point
+        cluster = cluster_assignments[point_idx]  # Getting cluster assignment for point
         cluster_points = X_values[np.array(cluster_assignments) == cluster]  # Extracting points in the same cluster
-        a_i = np.mean([euclidean_distance(point, other_point) for other_point in cluster_points])  # Calculating average intra-cluster distance
-        
+    
+        # Calculate average intra-cluster distance
+        a_i = np.mean([euclidean_distance(point, other_point) for other_point in cluster_points])
+    
         b_i = np.inf
+        # Iterate over range(K) to find inter-cluster distances
         for j in range(K):
             if j != cluster:
                 other_cluster_points = X_values[np.array(cluster_assignments) == j]  # Extracting points from other clusters
                 b_ij = np.mean([euclidean_distance(point, other_point) for other_point in other_cluster_points])  # Calculating average inter-cluster distance
                 b_i = min(b_i, b_ij)  # Finding minimum inter-cluster distance
-        
-        silhouette_values.append((b_i - a_i) / max(a_i, b_i))  # Computing silhouette value
     
+        silhouette_values.append((b_i - a_i) / max(a_i, b_i))  # Computing silhouette value
+
     silhouette_avg = np.mean(silhouette_values)  # Calculating average silhouette score
+
     
     # Plot clusters
     for i in range(K):
