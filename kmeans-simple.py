@@ -144,6 +144,7 @@ def elbow_method():
     plt.show()  # Displaying the plot
 
 # Display GUI
+    # guide for GUI: https://pythonexamples.org/python-tkinter/
 root = Tk()  # Creating Tkinter window
 root.title("K-Means Clustering")  # Setting window title
 canvas = Canvas(root, width=300, height=100)  # Creating canvas for GUI components
